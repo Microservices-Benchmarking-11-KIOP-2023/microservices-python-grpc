@@ -1,11 +1,16 @@
 import json
+import os
 import time
 from concurrent import futures
-import os
 
 import grpc
 
 from services.profile.proto import profile_pb2, profile_pb2_grpc
+
+PROFILE_SERVICE_ADDRESS = 'localhost:5002'
+
+current_dir = os.path.dirname(os.path.abspath(__file__))
+json_filepath = os.path.join(current_dir, '..', '..', 'data', 'hotels.json')
 
 
 def load_profiles(hotel_ids, file_path):
@@ -21,16 +26,9 @@ def load_profiles(hotel_ids, file_path):
     return matching_profiles if matching_profiles else None
 
 
-# Get the directory of the currently executing script
-current_dir = os.path.dirname(os.path.abspath(__file__))
-
-# Construct the full path to the geo.json file
-file_path = os.path.join(current_dir, '..', '..', 'data', 'hotels.json')
-
-
 class ProfileServicer(profile_pb2_grpc.ProfileServicer):
     def GetProfiles(self, request, context):
-        hotel_profiles = load_profiles(request.hotelIds, file_path)
+        hotel_profiles = load_profiles(request.hotelIds, json_filepath)
         if hotel_profiles is None:
             return profile_pb2.Result()
         else:
@@ -57,17 +55,10 @@ class ProfileServicer(profile_pb2_grpc.ProfileServicer):
 def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     profile_pb2_grpc.add_ProfileServicer_to_server(ProfileServicer(), server)
-    server.add_insecure_port('localhost:5002')
+    server.add_insecure_port(PROFILE_SERVICE_ADDRESS)
     server.start()
     try:
         while True:
-            time.sleep(86400)  # One day in seconds
+            time.sleep(86400)
     except KeyboardInterrupt:
         server.stop(0)
-
-
-if __name__ == '__main__':
-    serve()
-
-
-

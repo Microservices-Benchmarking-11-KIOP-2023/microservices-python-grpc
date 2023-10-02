@@ -1,17 +1,16 @@
 import json
+import os
 import time
 from concurrent import futures
 from typing import List
-import os
 
 import grpc
 
 from services.rate.proto import rate_pb2, rate_pb2_grpc
 
-# Get the directory of the currently executing script
-current_dir = os.path.dirname(os.path.abspath(__file__))
+RATE_SERVICE_ADDRESS = 'localhost:5004'
 
-# Construct the full path to the geo.json file
+current_dir = os.path.dirname(os.path.abspath(__file__))
 json_filepath = os.path.join(current_dir, '..', '..', 'data', 'inventory.json')
 
 
@@ -70,6 +69,7 @@ def get_rates(hotelIds: List[str], inDate: str, outDate: str) -> Result:
     result = Result(ratePlans=ratePlans)
     return result
 
+
 class RateServicer(rate_pb2_grpc.RateServicer):
     def GetRates(self, request, context):
         result = get_rates(request.hotelIds, request.inDate, request.outDate)
@@ -96,14 +96,10 @@ class RateServicer(rate_pb2_grpc.RateServicer):
 def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     rate_pb2_grpc.add_RateServicer_to_server(RateServicer(), server)
-    server.add_insecure_port('localhost:5004')
+    server.add_insecure_port(RATE_SERVICE_ADDRESS)
     server.start()
     try:
         while True:
-            time.sleep(86400)  # One day in seconds
+            time.sleep(86400)
     except KeyboardInterrupt:
         server.stop(0)
-
-
-if __name__ == '__main__':
-    serve()

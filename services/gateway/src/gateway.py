@@ -6,10 +6,9 @@ from services.search.proto import search_pb2, search_pb2_grpc
 
 app = Flask(__name__)
 
-
-
 SEARCH_SERVICE_ADDRESS = 'localhost:5001'
 PROFILE_SERVICE_ADDRESS = 'localhost:5002'
+
 
 @app.route('/hotels', methods=['GET'])
 def get_hotels():
@@ -24,30 +23,16 @@ def get_hotels():
         stub = search_pb2_grpc.SearchStub(channel)
         response = stub.Nearby(search_pb2.NearbyRequest(lat=lat, lon=lon, inDate=in_date, outDate=out_date))
 
-    # Extract hotel IDs from the response
     hotel_ids = response.hotelIds
 
-    # Call the profile service using gRPC to get detailed hotel profiles
+    # Call the profile service using gRPC
     with grpc.insecure_channel(PROFILE_SERVICE_ADDRESS) as channel:
         stub = profile_pb2_grpc.ProfileStub(channel)
         response = stub.GetProfiles(profile_pb2.Request(hotelIds=hotel_ids))
 
     # Convert the gRPC response to a JSON-friendly format
-    hotels = [{'id': hotel.id, 'name': hotel.name, 'phoneNumber': hotel.phoneNumber, 'description': hotel.description,
-               'address': {
-                   'streetNumber': hotel.address.streetNumber,
-                   'streetName': hotel.address.streetName,
-                   'city': hotel.address.city,
-                   'state': hotel.address.state,
-                   'country': hotel.address.country,
-                   'postalCode': hotel.address.postalCode,
-                   'lat': hotel.address.lat,
-                   'lon': hotel.address.lon,
-               },
-               'images': [{'url': image.url, 'default': image.default} for image in hotel.images]}
-              for hotel in response.hotels]
-
-    # Return the detailed hotel profiles
+    hotels = [{'id': hotel.id, 'coordinates': {'lat': hotel.address.lat, 'lon': hotel.address.lon},
+               'properties': {'name': hotel.name, 'phone_number': hotel.phoneNumber}} for hotel in response.hotels]
     return jsonify(hotels)
 
 
