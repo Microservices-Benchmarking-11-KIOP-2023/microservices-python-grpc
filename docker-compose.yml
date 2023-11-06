@@ -1,0 +1,42 @@
+version: '3.8'
+services:
+  gateway:
+    build:
+      context: .
+      dockerfile: services/gateway/Dockerfile
+    ports:
+      - "5000:8080"
+    networks:
+      - microservices_network
+
+  search-service:
+    build:
+      context: .
+      dockerfile: services/search/Dockerfile
+    networks:
+      - microservices_network
+
+  profile-service:
+    build:
+      context: .
+      dockerfile: services/profile/Dockerfile
+    networks:
+      - microservices_network
+
+  geo-service:
+    build:
+      context: .
+      dockerfile: services/geo/Dockerfile
+    networks:
+      - microservices_network
+
+  rate-service:
+    build:
+      context: .
+      dockerfile: services/rate/Dockerfile
+    networks:
+      - microservices_network
+
+networks:
+  microservices_network:
+    driver: bridge

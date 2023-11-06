@@ -5,12 +5,12 @@ from concurrent import futures
 
 import grpc
 
-from services.profile.proto import profile_pb2, profile_pb2_grpc
+from proto import profile_pb2, profile_pb2_grpc
 
-PROFILE_SERVICE_ADDRESS = 'localhost:5002'
+PROFILE_SERVICE_ADDRESS = '[::]:5002'
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
-json_filepath = os.path.join(current_dir, '..', '..', 'data', 'hotels.json')
+json_filepath = os.path.join(current_dir, '..', 'data', 'hotels.json')
 
 
 def load_profiles(hotel_ids, file_path):

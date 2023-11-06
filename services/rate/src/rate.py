@@ -6,12 +6,12 @@ from typing import List
 
 import grpc
 
-from services.rate.proto import rate_pb2, rate_pb2_grpc
+from proto import rate_pb2, rate_pb2_grpc
 
-RATE_SERVICE_ADDRESS = 'localhost:5004'
+RATE_SERVICE_ADDRESS = '[::]:5004'
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
-json_filepath = os.path.join(current_dir, '..', '..', 'data', 'inventory.json')
+json_filepath = os.path.join(current_dir, '..', 'data', 'inventory.json')
 
 
 class RoomType:
