@@ -9,7 +9,7 @@ import grpc
 
 from proto import geo_pb2, geo_pb2_grpc
 
-GEO_SERVICE_ADDRESS = '[::]:5003'
+GEO_SERVICE_ADDRESS = '[::]:8080'
 EARTH_RADIUS_KM = 6371.0
 MAX_SEARCH_RADIUS_KM = 10  # limit to 10 km
 

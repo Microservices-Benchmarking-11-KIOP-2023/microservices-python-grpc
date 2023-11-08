@@ -7,8 +7,8 @@ from proto import search_pb2, search_pb2_grpc
 
 app = Flask(__name__)
 
-SEARCH_SERVICE_ADDRESS = 'search-service:5001'
-PROFILE_SERVICE_ADDRESS = 'profile-service:5002'
+SEARCH_SERVICE_ADDRESS = 'search:8080'
+PROFILE_SERVICE_ADDRESS = 'profile:8080'
 
 # Configure basic logging
 logging.basicConfig(level=logging.INFO)

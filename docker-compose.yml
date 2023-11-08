@@ -10,7 +10,7 @@ services:
     networks:
       - microservices_network
 
-  search-service:
+  search:
     image: ghcr.io/microservices-benchmarking-11-kiop-2023/python-search-grpc:latest
     build:
       context: .
@@ -18,7 +18,7 @@ services:
     networks:
       - microservices_network
 
-  profile-service:
+  profile:
     image: ghcr.io/microservices-benchmarking-11-kiop-2023/python-profile-grpc:latest
     build:
       context: .
@@ -26,7 +26,7 @@ services:
     networks:
       - microservices_network
 
-  geo-service:
+  geo:
     image: ghcr.io/microservices-benchmarking-11-kiop-2023/python-geo-grpc:latest
     build:
       context: .
@@ -34,7 +34,7 @@ services:
     networks:
       - microservices_network
 
-  rate-service:
+  rate:
     image: ghcr.io/microservices-benchmarking-11-kiop-2023/python-rate-grpc:latest
     build:
       context: .

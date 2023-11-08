@@ -7,9 +7,9 @@ from proto import geo_pb2, geo_pb2_grpc
 from proto import rate_pb2, rate_pb2_grpc
 from proto import search_pb2, search_pb2_grpc
 
-SEARCH_SERVICE_ADDRESS = '[::]:5001'
-GEO_SERVICE_ADDRESS = 'geo-service:5003'
-RATE_SERVICE_ADDRESS = 'rate-service:5004'
+SEARCH_SERVICE_ADDRESS = '[::]:8080'
+GEO_SERVICE_ADDRESS = 'geo:8080'
+RATE_SERVICE_ADDRESS = 'rate:8080'
 
 
 class SearchServicer(search_pb2_grpc.SearchServicer):

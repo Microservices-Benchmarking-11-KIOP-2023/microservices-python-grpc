@@ -7,7 +7,7 @@ import grpc
 
 from proto import profile_pb2, profile_pb2_grpc
 
-PROFILE_SERVICE_ADDRESS = '[::]:5002'
+PROFILE_SERVICE_ADDRESS = '[::]:8080'
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 json_filepath = os.path.join(current_dir, '..', 'data', 'hotels.json')
