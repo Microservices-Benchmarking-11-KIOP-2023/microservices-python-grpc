@@ -40,9 +40,10 @@ def get_hotels():
             profile_response = stub.GetProfiles(profile_pb2.Request(hotelIds=hotel_ids))
 
         # Convert the gRPC response to a JSON-friendly format
-        hotels = [{'id': hotel.id, 'coordinates': {'lat': hotel.address.lat, 'lon': hotel.address.lon},
-                   'properties': {'name': hotel.name, 'phone_number': hotel.phoneNumber}} for hotel in
-                  profile_response.hotels]
+        hotels = [
+            {'type': 'Feature', 'id': hotel.id, 'properties': {'name': hotel.name, 'phone_number': hotel.phoneNumber},
+             'geometry': {'type': 'Point', 'coordinates': [hotel.address.lat, hotel.address.lon]}} for hotel in
+            profile_response.hotels]
 
         return jsonify(hotels)
 

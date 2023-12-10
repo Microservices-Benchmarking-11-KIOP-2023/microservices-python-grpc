@@ -14,17 +14,25 @@ RATE_SERVICE_ADDRESS = 'rate:8080'
 
 class SearchServicer(search_pb2_grpc.SearchServicer):
     def Nearby(self, request, context):
+        import time
+        start_time = time.time()
         geo_channel = grpc.insecure_channel(GEO_SERVICE_ADDRESS)
         geo_stub = geo_pb2_grpc.GeoStub(geo_channel)
         location_request = geo_pb2.Request(lat=request.lat, lon=request.lon)
         geo_response = geo_stub.Nearby(location_request)
+        end_time = time.time()
+        print(f"Time taken in search service, geo call: {end_time - start_time} seconds")
 
+        start_time = time.time()
         rate_channel = grpc.insecure_channel(RATE_SERVICE_ADDRESS)
         rate_stub = rate_pb2_grpc.RateStub(rate_channel)
         rate_request = rate_pb2.Request(hotelIds=geo_response.hotelIds, inDate=request.inDate, outDate=request.outDate)
         rate_response = rate_stub.GetRates(rate_request)
+        end_time = time.time()
+        print(f"Time taken in search service, rate call: {end_time - start_time} seconds")
 
         available_hotel_ids = [rate_plan.hotelId for rate_plan in rate_response.ratePlans]
+
 
         return search_pb2.SearchResult(hotelIds=available_hotel_ids)
 
